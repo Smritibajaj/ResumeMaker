@@ -1,0 +1,39 @@
+:root {
+  --theme-light-blue: red;
+  --flex-theme: {
+    border: 1px solid var(--theme-dark-blue);
+    font-family: var(--theme-font-family);
+    padding: var(--theme-wide-padding);
+    background-color: var(--theme-light-blue);
+  };
+}
+body{
+  overflow-x: hidden;
+  height: 100%;
+}
+.pdf-section {
+  overflow: scroll;
+}
+
+.overflow-top {
+  margin-top: 3.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.min-height-canvas {
+  min-height: calc(100% - 7rem);
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+}
+
+.nav-link {
+  color: #6c757d !important;
+}
+
+.paper{
+  width:794px !important; 
+  height:1122px !important;
+}
