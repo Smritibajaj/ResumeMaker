@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { SketchPicker } from "react-color";
 import Pdf from "react-to-pdf";
-import {
-  Container,
-  Row,
-  Col,
-  Tab,
-  Nav,
-  Navbar,
-  Form,
-  Button,
-} from "react-bootstrap";
+import Content from "./Content";
+import Template from "./Template";
+import HeaderSetting from "./HeaderSetting";
+import { EditorState, ContentState, convertToRaw } from "draft-js";
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from "html-to-draftjs";
+import ContentViewer from "./ContentViewer";
+import { Container, Row, Col, Tab, Nav, Navbar, Button } from "react-bootstrap";
 import "./css/App.css";
 
 const App = () => {
@@ -19,16 +16,62 @@ const App = () => {
   const handleTabSelection = (key) => {
     setActiveTab(key);
   };
-  const [displayColorPicker, setDisplayColorPicker] = useState(false);
-
-  const handleClose = () => {
-    setDisplayColorPicker(false);
+  const html1 = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
+  const contentBlock1 = htmlToDraft(html1);
+  const contentState1 = ContentState.createFromBlockArray(
+    contentBlock1.contentBlocks
+  );
+  const html2 = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
+  const contentBlock2 = htmlToDraft(html2);
+  const contentState2 = ContentState.createFromBlockArray(
+    contentBlock2.contentBlocks
+  );
+  const html3 = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
+  const contentBlock3 = htmlToDraft(html3);
+  const contentState3 = ContentState.createFromBlockArray(
+    contentBlock3.contentBlocks
+  );
+  const html4 = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
+  const contentBlock4 = htmlToDraft(html4);
+  const contentState4 = ContentState.createFromBlockArray(
+    contentBlock4.contentBlocks
+  );
+  const [section1, setSection1] = React.useState(() =>
+    contentBlock1
+      ? EditorState.createWithContent(contentState1)
+      : EditorState.createEmpty()
+  );
+  const [section2, setSection2] = React.useState(() =>
+    contentBlock2
+      ? EditorState.createWithContent(contentState2)
+      : EditorState.createEmpty()
+  );
+  const [section3, setSection3] = React.useState(() =>
+    contentBlock3
+      ? EditorState.createWithContent(contentState3)
+      : EditorState.createEmpty()
+  );
+  const [section4, setSection4] = React.useState(() =>
+    contentBlock4
+      ? EditorState.createWithContent(contentState4)
+      : EditorState.createEmpty()
+  );
+  const state = {
+    section1,
+    section2,
+    section3,
+    section4,
+    setSection1,
+    setSection2,
+    setSection3,
+    setSection4,
   };
-  const handleClick = () => {
-    setDisplayColorPicker(!displayColorPicker);
-  };
+  const section1Content = draftToHtml(convertToRaw(section1.getCurrentContent()))
+  const section2Content = draftToHtml(convertToRaw(section2.getCurrentContent()))
+  const section3Content = draftToHtml(convertToRaw(section3.getCurrentContent()))
+  const section4Content = draftToHtml(convertToRaw(section4.getCurrentContent()))
   const [header, setHeader] = useState({
-    backgroundColor: "#ffffff",
+    backgroundColor: "#bbb",
     textColor: "",
     fontStyle: "",
     fontSize: "",
@@ -42,10 +85,6 @@ const App = () => {
     location: "",
   });
 
-  const handleChangeComplete = (color) => {
-    setHeader({ ...header, backgroundColor: color.hex });
-  };
-
   const handlePreviousTab = (event) => {
     event.preventDefault();
     const tab = parseInt(activeTab) - 1;
@@ -58,11 +97,11 @@ const App = () => {
     if (tab >= 1 && tab <= 7) setActiveTab(`${tab}`);
   };
   return (
-    <>
+    <div className="width-100 p-0 m-0">
       <Navbar bg="light" fixed="top">
         <Navbar.Brand href="#home">Brand link</Navbar.Brand>
       </Navbar>
-      <Container fluid className={`p-0 overflow-top`}>
+      <Container fluid className={`overflow-top`}>
         <Row className="min-height-canvas">
           <Col lg="5">
             <Tab.Container
@@ -74,180 +113,66 @@ const App = () => {
                 <Col sm={3}>
                   <Nav variant="pills" className="flex-column">
                     <Nav.Item>
-                      <Nav.Link eventKey="1">Templates</Nav.Link>
+                      <Nav.Link eventKey="1">Template</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link eventKey="2">Profile</Nav.Link>
+                      <Nav.Link eventKey="2">Header</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link eventKey="3">Awards</Nav.Link>
+                      <Nav.Link eventKey="3">Content</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link eventKey="4">Projects</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="5">Skills</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="6">Work</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="7">Education</Nav.Link>
+                      <Nav.Link eventKey="4">Footer</Nav.Link>
                     </Nav.Item>
                   </Nav>
                 </Col>
                 <Col sm={9}>
                   <Tab.Content>
-                    <Tab.Pane eventKey="1"></Tab.Pane>
-                    <Tab.Pane eventKey="2">
-                      <Form>
-                        <Form.Group controlId="formBasicName">
-                          <Form.Label>Full Name</Form.Label>
-                          <Form.Control type="text" placeholder="John Smith" />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
-                          <Form.Label>Email address</Form.Label>
-                          <Form.Control
-                            type="email"
-                            placeholder="johnsmith@gmail.com"
-                          />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicMobile">
-                          <Form.Label>Phone Number</Form.Label>
-                          <Form.Control
-                            type="tel"
-                            placeholder="(555) 123-4567"
-                          />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicLocation">
-                          <Form.Label>Location</Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="New York, NY"
-                          />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicLink">
-                          <Form.Label>Link</Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="mycoolportfolio.com/myname"
-                          />
-                        </Form.Group>
-                        <Form.Group className="d-flex">
-                          <Form.Label>Background Color</Form.Label>
-                          <div
-                            style={{
-                              marginLeft: "1rem",
-                              padding: "0.5rem",
-                              background: "#fff",
-                              borderRadius: "1px",
-                              boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-                              display: "inline-block",
-                              cursor: "pointer",
-                            }}
-                          >
-                            <div
-                              onClick={handleClick}
-                              style={{
-                                width: "36px",
-                                height: "14px",
-                                borderRadius: "2px",
-                                background: `${header.backgroundColor}`,
-                              }}
-                            >
-                              <div />
-                            </div>
-                            {displayColorPicker ? (
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  zIndex: "2",
-                                }}
-                              >
-                                <div
-                                  onClick={handleClose}
-                                  style={{
-                                    position: "fixed",
-                                    top: "0px",
-                                    right: "0px",
-                                    bottom: "0px",
-                                    left: "0px",
-                                  }}
-                                />
-                                <SketchPicker
-                                  color={header.backgroundColor}
-                                  onChange={handleChangeComplete}
-                                />
-                              </div>
-                            ) : null}
-                          </div>
-                        </Form.Group>
-                        <Form.Group className="d-flex">
-                          <Form.Label>Font Color</Form.Label>
-                          <div
-                            style={{
-                              marginLeft: "1rem",
-                              padding: "0.5rem",
-                              background: "#fff",
-                              borderRadius: "1px",
-                              boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-                              display: "inline-block",
-                              cursor: "pointer",
-                            }}
-                          >
-                            <div
-                              onClick={handleClick}
-                              style={{
-                                width: "36px",
-                                height: "14px",
-                                borderRadius: "2px",
-                                background: `${header.backgroundColor}`,
-                              }}
-                            >
-                              <div />
-                            </div>
-                            {displayColorPicker ? (
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  zIndex: "2",
-                                }}
-                              >
-                                <div
-                                  onClick={handleClose}
-                                  style={{
-                                    position: "fixed",
-                                    top: "0px",
-                                    right: "0px",
-                                    bottom: "0px",
-                                    left: "0px",
-                                  }}
-                                />
-                                <SketchPicker
-                                  color={header.backgroundColor}
-                                  onChange={handleChangeComplete}
-                                />
-                              </div>
-                            ) : null}
-                          </div>
-                        </Form.Group>
-                      </Form>
+                    <Tab.Pane eventKey="1">
+                      <Template />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="3">hi js</Tab.Pane>
-                    <Tab.Pane eventKey="4">hi js</Tab.Pane>
-                    <Tab.Pane eventKey="5">hi js</Tab.Pane>
-                    <Tab.Pane eventKey="6">hi js</Tab.Pane>
-                    <Tab.Pane eventKey="7">hi js</Tab.Pane>
+                    <Tab.Pane eventKey="2">
+                      <HeaderSetting header={header} setHeader={setHeader} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="3">
+                      <Content state={state} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="4">
+                      <HeaderSetting header={header} setHeader={setHeader} />
+                    </Tab.Pane>
                   </Tab.Content>
                 </Col>
               </Row>
             </Tab.Container>
           </Col>
-          <Col lg="7" className="pdf-section bg-secondary h-100 overflow-auto">
-            <Container ref={ref} className="bg-white my-5 paper">
-              <div style={{display: 'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', height:'240px' ,width:'100%',color:header.color, background: header.backgroundColor}}>
-                <div>{header.name}</div>
-                <div>{header.email}</div>
+          <Col
+            lg="7"
+            className="bg-secondary h-100 overflow-auto p-0 d-flex justify-content-center"
+          >
+            <Container className="bg-white my-5 p-0 m-0 paper">
+              <div
+                style={{ padding: 0, margin: 0, width: "100%", height: "100%" }}
+                ref={ref}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "240px",
+                    width: "100%",
+                    color: header.color,
+                    background: header.backgroundColor,
+                  }}
+                >
+                  <div>{header.name}</div>
+                  <div>{header.email}</div>
+                </div>
+                <ContentViewer content={section1Content} />
+                <ContentViewer content={section2Content} />
+                <ContentViewer content={section3Content} />
+                <ContentViewer content={section4Content} />
               </div>
             </Container>
           </Col>
@@ -270,7 +195,7 @@ const App = () => {
           </Pdf>
         </Container>
       </Navbar>
-    </>
+    </div>
   );
 };
 
